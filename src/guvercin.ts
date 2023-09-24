@@ -50,6 +50,8 @@ export class Guvercin {
     message: string,
     logLevel: 'SUCCESS' | 'DEBUG' | 'WARNING' | 'ERROR' | 'INFO'
   ) {
+    if (!message) throw new Error('Message is required')
+    if (!logLevel) throw new Error('Log level is required')
     const time = moment().format(this.settings.timeFormat)
     const textColor = LogColors[logLevel]
     const level = logLevel

@@ -38,6 +38,10 @@ class Guvercin {
         this.settings = Object.assign(Object.assign({}, this.settings), settings);
     }
     log(message, logLevel) {
+        if (!message)
+            throw new Error('Message is required');
+        if (!logLevel)
+            throw new Error('Log level is required');
         const time = moment().format(this.settings.timeFormat);
         const textColor = LogColors[logLevel];
         const level = logLevel;
