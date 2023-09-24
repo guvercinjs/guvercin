@@ -1,0 +1,41 @@
+{
+  "name": "guvercin",
+  "version": "1.0.0",
+  "description": "Guvercin is a very simple logger library for Node.js.",
+  "main": "dist/index.js",
+  "type": "commonjs",
+  "files": [
+    "dist"
+  ],
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "dev": "tsc -w",
+    "build": "tsc",
+    "format": "prettier \"src/**/*.ts\"",
+    "format:fix": "prettier --write \"src/**/*.ts\"",
+    "lint": "eslint \"src/**/*.ts\"",
+    "lint:fix": "eslint --fix \"src/**/*.ts\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/guvercinjs/guvercin.git"
+  },
+  "author": "Onur Ravli <onur@ravli.co>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/guvercinjs/guvercin/issues"
+  },
+  "homepage": "https://github.com/guvercinjs/guvercin#readme",
+  "devDependencies": {
+    "@types/node": "^20.6.5",
+    "@typescript-eslint/eslint-plugin": "^6.7.2",
+    "@typescript-eslint/parser": "^6.7.2",
+    "eslint": "^8.50.0",
+    "prettier": "^3.0.3",
+    "typescript": "^5.2.2"
+  },
+  "dependencies": {
+    "chalk": "4.1.2",
+    "moment": "^2.29.4"
+  }
+}
