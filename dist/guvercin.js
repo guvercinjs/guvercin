@@ -30,8 +30,9 @@ const writeToFile = (message, filePath) => {
 };
 const defaultSettings = {
     saveToLocal: false,
+    logPath: '',
     separator: '-',
-    timeFormat: 'DD/MM/YYYY HH:mm:ss',
+    timeFormat: 'YYYY-MM-DD HH:mm:ss',
     hideTime: false,
     jsonOutput: false,
     disabled: false,
@@ -41,16 +42,19 @@ class Guvercin {
         try {
             const settings = JSON.parse(fs_1.default.readFileSync('./guvercin.config.json', 'utf-8'));
             this.settings = Object.assign(Object.assign({}, this.settings), settings);
+            return this.settings;
         }
         catch (error) {
             if (error.code == 'ENOENT') {
                 this.settings = defaultSettings;
             }
-            else
+            else {
                 return null;
+            }
         }
     }
     constructor(settings) {
+        this.settings = defaultSettings;
         this.settings = this.loadSettings() || defaultSettings;
         this.settings = Object.assign(Object.assign({}, this.settings), settings);
     }
