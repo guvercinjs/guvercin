@@ -57,3 +57,18 @@ guvercin.info('This is an info message')
 guvercin.success('This is a success message')
 guvercin.debug('This is a debug message')
 ```
+
+## guvercin.config.json
+
+You don't have to pass options to Guvercin constructor. You can create a `guvercin.config.json` file in your project root and pass options to Guvercin from there.
+
+```json
+{
+  "hideTime": true,
+  "timeFormat": "DD/MM/YYYY HH:mm:ss",
+  "saveToLocal": true,
+  "jsonOutput": true,
+  "logPath": "./logs.json",
+  "separator": "@"
+}
+```
