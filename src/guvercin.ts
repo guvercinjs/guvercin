@@ -12,7 +12,7 @@ type Settings = {
   disabled?: boolean
 }
 
-enum LogLevels {
+export enum LogLevels {
   INFO = 'INFO',
   ERROR = 'ERROR',
   WARNING = 'WARNING',
