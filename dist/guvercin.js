@@ -23,15 +23,11 @@ const LogColors = {
     WARNING: chalk_1.default.rgb(250, 176, 5),
 };
 const writeToFile = (message, filePath) => {
-    try {
-        fs_1.default.appendFile(filePath, message, (err) => {
-            if (err)
-                throw err;
-        });
-    }
-    catch (error) {
-        throw new Error(error);
-    }
+    fs_1.default.appendFile(filePath, message, (err) => {
+        if (err) {
+            throw err;
+        }
+    });
 };
 const defaultSettings = {
     disabled: false,
@@ -61,12 +57,15 @@ class Guvercin {
         return this.settings;
     }
     log(message, logLevel) {
-        if (this.settings.disabled)
+        if (this.settings.disabled) {
             return;
-        if (!message)
+        }
+        if (!message) {
             throw new Error('Message is required');
-        if (!logLevel)
+        }
+        if (!logLevel) {
             throw new Error('Log level is required');
+        }
         const time = this.settings.hideTime ? '' : (0, moment_1.default)().format(this.settings.timeFormat);
         const level = logLevel;
         const textColor = LogColors[logLevel];

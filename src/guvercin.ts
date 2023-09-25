@@ -29,13 +29,11 @@ const LogColors = {
 }
 
 const writeToFile = (message: string, filePath: string) => {
-  try {
-    fs.appendFile(filePath, message, (err) => {
-      if (err) throw err
-    })
-  } catch (error) {
-    throw new Error(error)
-  }
+  fs.appendFile(filePath, message, (err) => {
+    if (err) {
+      throw err
+    }
+  })
 }
 
 const defaultSettings: Settings = {
@@ -66,9 +64,15 @@ export class Guvercin {
     return this.settings
   }
   log(message: string, logLevel: 'SUCCESS' | 'DEBUG' | 'WARNING' | 'ERROR' | 'INFO') {
-    if (this.settings.disabled) return
-    if (!message) throw new Error('Message is required')
-    if (!logLevel) throw new Error('Log level is required')
+    if (this.settings.disabled) {
+      return
+    }
+    if (!message) {
+      throw new Error('Message is required')
+    }
+    if (!logLevel) {
+      throw new Error('Log level is required')
+    }
     const time = this.settings.hideTime ? '' : moment().format(this.settings.timeFormat)
     const level = logLevel
     const textColor = LogColors[logLevel]
