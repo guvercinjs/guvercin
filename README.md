@@ -8,12 +8,8 @@ Guvercin (Turkish word for "dove", pronounced `/ɡyverˈdʒin/`) is a very simpl
 
 ## Installation
 
-<!-- ```bash
-pnpm install guvercin
-``` -->
-
 ```bash
-npm install https://github.com/guvercinjs/guvercin
+pnpm install guvercin
 ```
 
 ## Usage (CommonJS)
