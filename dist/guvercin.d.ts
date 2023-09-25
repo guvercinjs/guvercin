@@ -7,6 +7,13 @@ type Settings = {
     jsonOutput?: boolean;
     disabled?: boolean;
 };
+export declare enum LogLevels {
+    INFO = "INFO",
+    ERROR = "ERROR",
+    WARNING = "WARNING",
+    DEBUG = "DEBUG",
+    SUCCESS = "SUCCESS"
+}
 export declare class Guvercin {
     private settings;
     constructor(settings?: Settings);

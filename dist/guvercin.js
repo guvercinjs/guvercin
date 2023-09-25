@@ -26,7 +26,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Guvercin = void 0;
+exports.Guvercin = exports.LogLevels = void 0;
 const moment_1 = __importDefault(require("moment"));
 const chalk_1 = __importDefault(require("chalk"));
 const fs = __importStar(require("fs"));
@@ -37,7 +37,7 @@ var LogLevels;
     LogLevels["WARNING"] = "WARNING";
     LogLevels["DEBUG"] = "DEBUG";
     LogLevels["SUCCESS"] = "SUCCESS";
-})(LogLevels || (LogLevels = {}));
+})(LogLevels || (exports.LogLevels = LogLevels = {}));
 const LogColors = {
     INFO: chalk_1.default.rgb(100, 100, 255),
     ERROR: chalk_1.default.rgb(255, 100, 100),
