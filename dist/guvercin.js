@@ -9,54 +9,56 @@ const chalk_1 = __importDefault(require("chalk"));
 const fs_1 = __importDefault(require("fs"));
 var LogLevels;
 (function (LogLevels) {
-    LogLevels["INFO"] = "INFO";
-    LogLevels["ERROR"] = "ERROR";
-    LogLevels["WARNING"] = "WARNING";
     LogLevels["DEBUG"] = "DEBUG";
+    LogLevels["ERROR"] = "ERROR";
+    LogLevels["INFO"] = "INFO";
     LogLevels["SUCCESS"] = "SUCCESS";
+    LogLevels["WARNING"] = "WARNING";
 })(LogLevels || (exports.LogLevels = LogLevels = {}));
 const LogColors = {
-    INFO: chalk_1.default.rgb(100, 100, 255),
-    ERROR: chalk_1.default.rgb(255, 100, 100),
-    WARNING: chalk_1.default.rgb(250, 176, 5),
     DEBUG: chalk_1.default.rgb(100, 100, 100),
+    ERROR: chalk_1.default.rgb(255, 100, 100),
+    INFO: chalk_1.default.rgb(100, 100, 255),
     SUCCESS: chalk_1.default.rgb(100, 255, 100),
+    WARNING: chalk_1.default.rgb(250, 176, 5),
 };
 const writeToFile = (message, filePath) => {
-    fs_1.default.appendFile(filePath, message, (err) => {
-        if (err)
-            throw err;
-    });
+    try {
+        fs_1.default.appendFile(filePath, message, (err) => {
+            if (err)
+                throw err;
+        });
+    }
+    catch (error) {
+        throw new Error(error);
+    }
 };
 const defaultSettings = {
-    saveToLocal: false,
-    logPath: '',
-    separator: '-',
-    timeFormat: 'YYYY-MM-DD HH:mm:ss',
+    disabled: false,
     hideTime: false,
     jsonOutput: false,
-    disabled: false,
+    logPath: '',
+    saveToLocal: false,
+    separator: '-',
+    timeFormat: 'YYYY-MM-DD HH:mm:ss',
 };
 class Guvercin {
     loadSettings() {
         try {
             const settings = JSON.parse(fs_1.default.readFileSync('./guvercin.config.json', 'utf-8'));
-            this.settings = Object.assign(Object.assign({}, this.settings), settings);
-            return this.settings;
+            return Object.assign(Object.assign({}, this.settings), settings);
         }
         catch (error) {
-            if (error.code == 'ENOENT') {
-                this.settings = defaultSettings;
-            }
-            else {
-                return null;
-            }
+            return null;
         }
     }
     constructor(settings) {
         this.settings = defaultSettings;
-        this.settings = this.loadSettings() || defaultSettings;
-        this.settings = Object.assign(Object.assign({}, this.settings), settings);
+        this.settings = this.loadSettings() || defaultSettings; // First reads file if exists
+        this.settings = Object.assign(Object.assign({}, this.settings), settings); // Then overrides with given settings in constructor
+    }
+    getSettings() {
+        return this.settings;
     }
     log(message, logLevel) {
         if (this.settings.disabled)
@@ -65,153 +67,51 @@ class Guvercin {
             throw new Error('Message is required');
         if (!logLevel)
             throw new Error('Log level is required');
-        const time = (0, moment_1.default)().format(this.settings.timeFormat);
-        const textColor = LogColors[logLevel];
+        const time = this.settings.hideTime
+            ? ''
+            : (0, moment_1.default)().format(this.settings.timeFormat);
         const level = logLevel;
-        const logTextColored = `${this.settings.hideTime ? '' : `${time} ${this.settings.separator} `}${textColor(`[${chalk_1.default.bold(level)}]`)} ${this.settings.separator} ${message}`;
-        const logTextNotColored = `${this.settings.hideTime ? '' : `${time} ${this.settings.separator} `}[${level}] ${this.settings.separator} ${message}`;
-        console.log(logTextColored);
-        // TODO: Fix JSON output
-        if (this.settings.saveToLocal) {
+        const textColor = LogColors[logLevel];
+        const separator = this.settings.separator;
+        const textColored = `${time} ${separator} ${textColor(`[${chalk_1.default.bold(level)}]`)} ${separator} ${message}`;
+        const textNotColored = `${time} ${separator} [${level}] ${separator} ${message}`;
+        logLevel === 'ERROR'
+            ? console.error(textColored)
+            : logLevel === 'WARNING'
+                ? console.warn(textColored)
+                : console.log(textColored);
+        if (this.settings.saveToLocal && this.settings.logPath) {
             if (this.settings.jsonOutput) {
-                writeToFile(`${JSON.stringify({
-                    time: time,
-                    level: level,
-                    message: message,
-                })}\n`, this.settings.logPath);
+                if (this.settings.logPath.endsWith('.json')) {
+                    writeToFile(`${JSON.stringify({
+                        time: time,
+                        level: level,
+                        message: message,
+                    })}\n`, this.settings.logPath);
+                }
+                else {
+                    throw new Error('JSON output is enabled but log path is not a JSON file.');
+                }
             }
             else {
-                writeToFile(`${logTextNotColored}\n`, this.settings.logPath);
-            }
-        }
-    }
-    info(message) {
-        if (this.settings.disabled)
-            return;
-        if (!message)
-            throw new Error('Message is required');
-        const time = (0, moment_1.default)().format(this.settings.timeFormat);
-        const textColor = chalk_1.default.rgb(100, 100, 255);
-        const level = LogLevels.INFO;
-        const logTextColored = `${this.settings.hideTime ? '' : `${time} ${this.settings.separator} `}${textColor(`[${chalk_1.default.bold(level)}]`)} ${this.settings.separator} ${message}`;
-        const logTextNotColored = `${this.settings.hideTime ? '' : `${time} ${this.settings.separator} `}[${level}] ${this.settings.separator} ${message}`;
-        console.log(logTextColored);
-        // TODO: Fix JSON output
-        if (this.settings.saveToLocal) {
-            if (this.settings.jsonOutput) {
-                writeToFile(`${JSON.stringify({
-                    time: time,
-                    level: level,
-                    message: message,
-                })}\n`, this.settings.logPath);
-            }
-            else {
-                writeToFile(`${logTextNotColored}\n`, this.settings.logPath);
+                writeToFile(`${textNotColored}\n`, this.settings.logPath);
             }
         }
     }
     error(message) {
-        if (this.settings.disabled)
-            return;
-        if (!message)
-            throw new Error('Message is required');
-        const time = (0, moment_1.default)().format(this.settings.timeFormat);
-        const textColor = chalk_1.default.rgb(255, 100, 100);
-        const level = LogLevels.ERROR;
-        const logTextColored = `${this.settings.hideTime ? '' : `${time} ${this.settings.separator} `}${textColor(`[${chalk_1.default.bold(level)}]`)} ${this.settings.separator} ${message}`;
-        const logTextNotColored = `${this.settings.hideTime ? '' : `${time} ${this.settings.separator} `}[${level}] ${this.settings.separator} ${message}`;
-        console.error(logTextColored);
-        // TODO: Fix JSON output
-        if (this.settings.saveToLocal) {
-            if (this.settings.jsonOutput) {
-                writeToFile(`${JSON.stringify({
-                    time: time,
-                    level: level,
-                    message: message,
-                })}\n`, this.settings.logPath);
-            }
-            else {
-                writeToFile(`${logTextNotColored}\n`, this.settings.logPath);
-            }
-        }
+        this.log(message, LogLevels.ERROR);
     }
     warning(message) {
-        if (this.settings.disabled)
-            return;
-        if (!message)
-            throw new Error('Message is required');
-        const time = (0, moment_1.default)().format(this.settings.timeFormat);
-        const textColor = chalk_1.default.rgb(250, 176, 5);
-        const level = LogLevels.WARNING;
-        const logTextColored = `${this.settings.hideTime ? '' : `${time} ${this.settings.separator} `}${textColor(`[${chalk_1.default.bold(level)}]`)} ${this.settings.separator} ${message}`;
-        const logTextNotColored = `${this.settings.hideTime ? '' : `${time} ${this.settings.separator} `}[${level}] ${this.settings.separator} ${message}`;
-        console.warn(logTextColored);
-        // TODO: Fix JSON output
-        if (this.settings.saveToLocal) {
-            if (this.settings.jsonOutput) {
-                writeToFile(`${JSON.stringify({
-                    time: time,
-                    level: level,
-                    message: message,
-                })}\n`, this.settings.logPath);
-            }
-            else {
-                writeToFile(`${logTextNotColored}\n`, this.settings.logPath);
-            }
-        }
-    }
-    debug(message) {
-        if (this.settings.disabled)
-            return;
-        if (!message)
-            throw new Error('Message is required');
-        const time = (0, moment_1.default)().format(this.settings.timeFormat);
-        const textColor = chalk_1.default.rgb(100, 100, 100);
-        const level = LogLevels.DEBUG;
-        const logTextColored = `${this.settings.hideTime ? '' : `${time} ${this.settings.separator} `}${textColor(`[${chalk_1.default.bold(level)}]`)} ${this.settings.separator} ${message}`;
-        const logTextNotColored = `${this.settings.hideTime ? '' : `${time} ${this.settings.separator} `}[${level}] ${this.settings.separator} ${message}`;
-        console.log(logTextColored);
-        // TODO: Fix JSON output
-        if (this.settings.saveToLocal) {
-            if (this.settings.jsonOutput) {
-                writeToFile(`${JSON.stringify({
-                    time: time,
-                    level: level,
-                    message: message,
-                })}\n`, this.settings.logPath);
-            }
-            else {
-                writeToFile(`${logTextNotColored}\n`, this.settings.logPath);
-            }
-        }
+        this.log(message, LogLevels.WARNING);
     }
     success(message) {
-        if (this.settings.disabled)
-            return;
-        if (!message)
-            throw new Error('Message is required');
-        const time = (0, moment_1.default)().format(this.settings.timeFormat);
-        const textColor = chalk_1.default.rgb(100, 255, 100);
-        const level = LogLevels.SUCCESS;
-        const logTextColored = `${this.settings.hideTime ? '' : `${time} ${this.settings.separator} `}${textColor(`[${chalk_1.default.bold(level)}]`)} ${this.settings.separator} ${message}`;
-        const logTextNotColored = `${this.settings.hideTime ? '' : `${time} ${this.settings.separator} `}[${level}] ${this.settings.separator} ${message}`;
-        console.log(logTextColored);
-        // TODO: Fix JSON output
-        if (this.settings.saveToLocal) {
-            if (this.settings.jsonOutput) {
-                writeToFile(`${JSON.stringify({
-                    time: time,
-                    level: level,
-                    message: message,
-                })}\n`, this.settings.logPath);
-            }
-            else {
-                writeToFile(`${logTextNotColored}\n`, this.settings.logPath);
-            }
-        }
+        this.log(message, LogLevels.SUCCESS);
     }
-    getSettings() {
-        return this.settings;
+    info(message) {
+        this.log(message, LogLevels.INFO);
+    }
+    debug(message) {
+        this.log(message, LogLevels.DEBUG);
     }
 }
 exports.Guvercin = Guvercin;

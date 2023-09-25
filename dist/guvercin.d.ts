@@ -1,28 +1,28 @@
 export interface Settings {
-    saveToLocal?: boolean;
-    logPath?: string;
-    separator?: string;
-    timeFormat?: string;
+    disabled?: boolean;
     hideTime?: boolean;
     jsonOutput?: boolean;
-    disabled?: boolean;
+    logPath?: string;
+    saveToLocal?: boolean;
+    separator?: string;
+    timeFormat?: string;
 }
 export declare enum LogLevels {
-    INFO = "INFO",
-    ERROR = "ERROR",
-    WARNING = "WARNING",
     DEBUG = "DEBUG",
-    SUCCESS = "SUCCESS"
+    ERROR = "ERROR",
+    INFO = "INFO",
+    SUCCESS = "SUCCESS",
+    WARNING = "WARNING"
 }
 export declare class Guvercin {
     private settings;
     private loadSettings;
     constructor(settings?: Settings);
+    getSettings(): Settings;
     log(message: string, logLevel: 'SUCCESS' | 'DEBUG' | 'WARNING' | 'ERROR' | 'INFO'): void;
-    info(message: string): void;
     error(message: string): void;
     warning(message: string): void;
-    debug(message: string): void;
     success(message: string): void;
-    getSettings(): Settings;
+    info(message: string): void;
+    debug(message: string): void;
 }

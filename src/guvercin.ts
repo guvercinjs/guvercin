@@ -3,45 +3,49 @@ import chalk from 'chalk'
 import fs from 'fs'
 
 export interface Settings {
-  saveToLocal?: boolean
-  logPath?: string
-  separator?: string
-  timeFormat?: string
+  disabled?: boolean
   hideTime?: boolean
   jsonOutput?: boolean
-  disabled?: boolean
+  logPath?: string
+  saveToLocal?: boolean
+  separator?: string
+  timeFormat?: string
 }
 
 export enum LogLevels {
-  INFO = 'INFO',
-  ERROR = 'ERROR',
-  WARNING = 'WARNING',
   DEBUG = 'DEBUG',
+  ERROR = 'ERROR',
+  INFO = 'INFO',
   SUCCESS = 'SUCCESS',
+  WARNING = 'WARNING',
 }
 
 const LogColors = {
-  INFO: chalk.rgb(100, 100, 255),
-  ERROR: chalk.rgb(255, 100, 100),
-  WARNING: chalk.rgb(250, 176, 5),
   DEBUG: chalk.rgb(100, 100, 100),
+  ERROR: chalk.rgb(255, 100, 100),
+  INFO: chalk.rgb(100, 100, 255),
   SUCCESS: chalk.rgb(100, 255, 100),
+  WARNING: chalk.rgb(250, 176, 5),
 }
 
 const writeToFile = (message: string, filePath: string) => {
-  fs.appendFile(filePath, message, (err) => {
-    if (err) throw err
-  })
+  try {
+    fs.appendFile(filePath, message, (err) => {
+      if (err) throw err
+    })
+  } catch (error) {
+    throw new Error(error)
+  }
 }
 
 const defaultSettings: Settings = {
-  saveToLocal: false,
-  logPath: '',
-  separator: '-',
-  timeFormat: 'YYYY-MM-DD HH:mm:ss',
+  disabled: false,
   hideTime: false,
   jsonOutput: false,
-  disabled: false,
+  logPath: '',
+  saveToLocal: false,
+  separator: '-',
+  timeFormat: 'YYYY-MM-DD HH:mm:ss',
 }
 
 export class Guvercin {
@@ -51,22 +55,18 @@ export class Guvercin {
       const settings = JSON.parse(
         fs.readFileSync('./guvercin.config.json', 'utf-8')
       )
-      this.settings = { ...this.settings, ...settings }
-      return this.settings
+      return { ...this.settings, ...settings }
     } catch (error) {
-      if (error.code == 'ENOENT') {
-        this.settings = defaultSettings
-      } else {
-        return null
-      }
+      return null
     }
   }
-
   constructor(settings?: Settings) {
-    this.settings = this.loadSettings() || defaultSettings
-    this.settings = { ...this.settings, ...settings }
+    this.settings = this.loadSettings() || defaultSettings // First reads file if exists
+    this.settings = { ...this.settings, ...settings } // Then overrides with given settings in constructor
   }
-
+  getSettings() {
+    return this.settings
+  }
   log(
     message: string,
     logLevel: 'SUCCESS' | 'DEBUG' | 'WARNING' | 'ERROR' | 'INFO'
@@ -74,191 +74,55 @@ export class Guvercin {
     if (this.settings.disabled) return
     if (!message) throw new Error('Message is required')
     if (!logLevel) throw new Error('Log level is required')
-    const time = moment().format(this.settings.timeFormat)
-    const textColor = LogColors[logLevel]
+    const time = this.settings.hideTime
+      ? ''
+      : moment().format(this.settings.timeFormat)
     const level = logLevel
-    const logTextColored = `${
-      this.settings.hideTime ? '' : `${time} ${this.settings.separator} `
-    }${textColor(`[${chalk.bold(level)}]`)} ${
-      this.settings.separator
-    } ${message}`
-    const logTextNotColored = `${
-      this.settings.hideTime ? '' : `${time} ${this.settings.separator} `
-    }[${level}] ${this.settings.separator} ${message}`
-    console.log(logTextColored)
-    // TODO: Fix JSON output
-    if (this.settings.saveToLocal) {
+    const textColor = LogColors[logLevel]
+    const separator = this.settings.separator
+    const textColored = `${time} ${separator} ${textColor(
+      `[${chalk.bold(level)}]`
+    )} ${separator} ${message}`
+    const textNotColored = `${time} ${separator} [${level}] ${separator} ${message}`
+    logLevel === 'ERROR'
+      ? console.error(textColored)
+      : logLevel === 'WARNING'
+      ? console.warn(textColored)
+      : console.log(textColored)
+    if (this.settings.saveToLocal && this.settings.logPath) {
       if (this.settings.jsonOutput) {
-        writeToFile(
-          `${JSON.stringify({
-            time: time,
-            level: level,
-            message: message,
-          })}\n`,
-          this.settings.logPath
-        )
+        if (this.settings.logPath.endsWith('.json')) {
+          writeToFile(
+            `${JSON.stringify({
+              time: time,
+              level: level,
+              message: message,
+            })}\n`,
+            this.settings.logPath
+          )
+        } else {
+          throw new Error(
+            'JSON output is enabled but log path is not a JSON file.'
+          )
+        }
       } else {
-        writeToFile(`${logTextNotColored}\n`, this.settings.logPath)
-      }
-    }
-  }
-
-  info(message: string) {
-    if (this.settings.disabled) return
-    if (!message) throw new Error('Message is required')
-    const time = moment().format(this.settings.timeFormat)
-    const textColor = chalk.rgb(100, 100, 255)
-    const level = LogLevels.INFO
-    const logTextColored = `${
-      this.settings.hideTime ? '' : `${time} ${this.settings.separator} `
-    }${textColor(`[${chalk.bold(level)}]`)} ${
-      this.settings.separator
-    } ${message}`
-    const logTextNotColored = `${
-      this.settings.hideTime ? '' : `${time} ${this.settings.separator} `
-    }[${level}] ${this.settings.separator} ${message}`
-    console.log(logTextColored)
-    // TODO: Fix JSON output
-    if (this.settings.saveToLocal) {
-      if (this.settings.jsonOutput) {
-        writeToFile(
-          `${JSON.stringify({
-            time: time,
-            level: level,
-            message: message,
-          })}\n`,
-          this.settings.logPath
-        )
-      } else {
-        writeToFile(`${logTextNotColored}\n`, this.settings.logPath)
+        writeToFile(`${textNotColored}\n`, this.settings.logPath)
       }
     }
   }
   error(message: string) {
-    if (this.settings.disabled) return
-    if (!message) throw new Error('Message is required')
-    const time = moment().format(this.settings.timeFormat)
-    const textColor = chalk.rgb(255, 100, 100)
-    const level = LogLevels.ERROR
-    const logTextColored = `${
-      this.settings.hideTime ? '' : `${time} ${this.settings.separator} `
-    }${textColor(`[${chalk.bold(level)}]`)} ${
-      this.settings.separator
-    } ${message}`
-    const logTextNotColored = `${
-      this.settings.hideTime ? '' : `${time} ${this.settings.separator} `
-    }[${level}] ${this.settings.separator} ${message}`
-    console.error(logTextColored)
-    // TODO: Fix JSON output
-    if (this.settings.saveToLocal) {
-      if (this.settings.jsonOutput) {
-        writeToFile(
-          `${JSON.stringify({
-            time: time,
-            level: level,
-            message: message,
-          })}\n`,
-          this.settings.logPath
-        )
-      } else {
-        writeToFile(`${logTextNotColored}\n`, this.settings.logPath)
-      }
-    }
+    this.log(message, LogLevels.ERROR)
   }
   warning(message: string) {
-    if (this.settings.disabled) return
-    if (!message) throw new Error('Message is required')
-    const time = moment().format(this.settings.timeFormat)
-    const textColor = chalk.rgb(250, 176, 5)
-    const level = LogLevels.WARNING
-    const logTextColored = `${
-      this.settings.hideTime ? '' : `${time} ${this.settings.separator} `
-    }${textColor(`[${chalk.bold(level)}]`)} ${
-      this.settings.separator
-    } ${message}`
-    const logTextNotColored = `${
-      this.settings.hideTime ? '' : `${time} ${this.settings.separator} `
-    }[${level}] ${this.settings.separator} ${message}`
-    console.warn(logTextColored)
-    // TODO: Fix JSON output
-    if (this.settings.saveToLocal) {
-      if (this.settings.jsonOutput) {
-        writeToFile(
-          `${JSON.stringify({
-            time: time,
-            level: level,
-            message: message,
-          })}\n`,
-          this.settings.logPath
-        )
-      } else {
-        writeToFile(`${logTextNotColored}\n`, this.settings.logPath)
-      }
-    }
-  }
-  debug(message: string) {
-    if (this.settings.disabled) return
-    if (!message) throw new Error('Message is required')
-    const time = moment().format(this.settings.timeFormat)
-    const textColor = chalk.rgb(100, 100, 100)
-    const level = LogLevels.DEBUG
-    const logTextColored = `${
-      this.settings.hideTime ? '' : `${time} ${this.settings.separator} `
-    }${textColor(`[${chalk.bold(level)}]`)} ${
-      this.settings.separator
-    } ${message}`
-    const logTextNotColored = `${
-      this.settings.hideTime ? '' : `${time} ${this.settings.separator} `
-    }[${level}] ${this.settings.separator} ${message}`
-    console.log(logTextColored)
-    // TODO: Fix JSON output
-    if (this.settings.saveToLocal) {
-      if (this.settings.jsonOutput) {
-        writeToFile(
-          `${JSON.stringify({
-            time: time,
-            level: level,
-            message: message,
-          })}\n`,
-          this.settings.logPath
-        )
-      } else {
-        writeToFile(`${logTextNotColored}\n`, this.settings.logPath)
-      }
-    }
+    this.log(message, LogLevels.WARNING)
   }
   success(message: string) {
-    if (this.settings.disabled) return
-    if (!message) throw new Error('Message is required')
-    const time = moment().format(this.settings.timeFormat)
-    const textColor = chalk.rgb(100, 255, 100)
-    const level = LogLevels.SUCCESS
-    const logTextColored = `${
-      this.settings.hideTime ? '' : `${time} ${this.settings.separator} `
-    }${textColor(`[${chalk.bold(level)}]`)} ${
-      this.settings.separator
-    } ${message}`
-    const logTextNotColored = `${
-      this.settings.hideTime ? '' : `${time} ${this.settings.separator} `
-    }[${level}] ${this.settings.separator} ${message}`
-    console.log(logTextColored)
-    // TODO: Fix JSON output
-    if (this.settings.saveToLocal) {
-      if (this.settings.jsonOutput) {
-        writeToFile(
-          `${JSON.stringify({
-            time: time,
-            level: level,
-            message: message,
-          })}\n`,
-          this.settings.logPath
-        )
-      } else {
-        writeToFile(`${logTextNotColored}\n`, this.settings.logPath)
-      }
-    }
+    this.log(message, LogLevels.SUCCESS)
   }
-  getSettings() {
-    return this.settings
+  info(message: string) {
+    this.log(message, LogLevels.INFO)
+  }
+  debug(message: string) {
+    this.log(message, LogLevels.DEBUG)
   }
 }
