@@ -5,6 +5,7 @@ type Settings = {
     timeFormat?: string;
     hideTime?: boolean;
     jsonOutput?: boolean;
+    disabled?: boolean;
 };
 export declare class Guvercin {
     private settings;

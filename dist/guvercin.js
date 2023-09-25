@@ -34,10 +34,13 @@ class Guvercin {
             timeFormat: 'YYYY-MM-DD HH:mm:ss',
             hideTime: false,
             jsonOutput: false,
+            disabled: false,
         };
         this.settings = Object.assign(Object.assign({}, this.settings), settings);
     }
     log(message, logLevel) {
+        if (this.settings.disabled)
+            return;
         if (!message)
             throw new Error('Message is required');
         if (!logLevel)
@@ -63,6 +66,10 @@ class Guvercin {
         }
     }
     info(message) {
+        if (this.settings.disabled)
+            return;
+        if (!message)
+            throw new Error('Message is required');
         const time = moment().format(this.settings.timeFormat);
         const textColor = chalk.rgb(100, 100, 255);
         const level = LogLevels.INFO;
@@ -84,6 +91,10 @@ class Guvercin {
         }
     }
     error(message) {
+        if (this.settings.disabled)
+            return;
+        if (!message)
+            throw new Error('Message is required');
         const time = moment().format(this.settings.timeFormat);
         const textColor = chalk.rgb(255, 100, 100);
         const level = LogLevels.ERROR;
@@ -105,6 +116,10 @@ class Guvercin {
         }
     }
     warning(message) {
+        if (this.settings.disabled)
+            return;
+        if (!message)
+            throw new Error('Message is required');
         const time = moment().format(this.settings.timeFormat);
         const textColor = chalk.rgb(250, 176, 5);
         const level = LogLevels.WARNING;
@@ -126,6 +141,10 @@ class Guvercin {
         }
     }
     debug(message) {
+        if (this.settings.disabled)
+            return;
+        if (!message)
+            throw new Error('Message is required');
         const time = moment().format(this.settings.timeFormat);
         const textColor = chalk.rgb(100, 100, 100);
         const level = LogLevels.DEBUG;
@@ -147,6 +166,10 @@ class Guvercin {
         }
     }
     success(message) {
+        if (this.settings.disabled)
+            return;
+        if (!message)
+            throw new Error('Message is required');
         const time = moment().format(this.settings.timeFormat);
         const textColor = chalk.rgb(100, 255, 100);
         const level = LogLevels.SUCCESS;

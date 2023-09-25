@@ -9,6 +9,7 @@ type Settings = {
   timeFormat?: string
   hideTime?: boolean
   jsonOutput?: boolean
+  disabled?: boolean
 }
 
 enum LogLevels {
@@ -41,6 +42,7 @@ export class Guvercin {
     timeFormat: 'YYYY-MM-DD HH:mm:ss',
     hideTime: false,
     jsonOutput: false,
+    disabled: false,
   } as Settings
   constructor(settings?: Settings) {
     this.settings = { ...this.settings, ...settings }
@@ -50,6 +52,7 @@ export class Guvercin {
     message: string,
     logLevel: 'SUCCESS' | 'DEBUG' | 'WARNING' | 'ERROR' | 'INFO'
   ) {
+    if (this.settings.disabled) return
     if (!message) throw new Error('Message is required')
     if (!logLevel) throw new Error('Log level is required')
     const time = moment().format(this.settings.timeFormat)
@@ -82,6 +85,8 @@ export class Guvercin {
   }
 
   info(message: string) {
+    if (this.settings.disabled) return
+    if (!message) throw new Error('Message is required')
     const time = moment().format(this.settings.timeFormat)
     const textColor = chalk.rgb(100, 100, 255)
     const level = LogLevels.INFO
@@ -111,6 +116,8 @@ export class Guvercin {
     }
   }
   error(message: string) {
+    if (this.settings.disabled) return
+    if (!message) throw new Error('Message is required')
     const time = moment().format(this.settings.timeFormat)
     const textColor = chalk.rgb(255, 100, 100)
     const level = LogLevels.ERROR
@@ -140,6 +147,8 @@ export class Guvercin {
     }
   }
   warning(message: string) {
+    if (this.settings.disabled) return
+    if (!message) throw new Error('Message is required')
     const time = moment().format(this.settings.timeFormat)
     const textColor = chalk.rgb(250, 176, 5)
     const level = LogLevels.WARNING
@@ -169,6 +178,8 @@ export class Guvercin {
     }
   }
   debug(message: string) {
+    if (this.settings.disabled) return
+    if (!message) throw new Error('Message is required')
     const time = moment().format(this.settings.timeFormat)
     const textColor = chalk.rgb(100, 100, 100)
     const level = LogLevels.DEBUG
@@ -198,6 +209,8 @@ export class Guvercin {
     }
   }
   success(message: string) {
+    if (this.settings.disabled) return
+    if (!message) throw new Error('Message is required')
     const time = moment().format(this.settings.timeFormat)
     const textColor = chalk.rgb(100, 255, 100)
     const level = LogLevels.SUCCESS
