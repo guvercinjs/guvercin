@@ -1,0 +1,9 @@
+{
+  "saveToLocal": false,
+  "logPath": "./guvercin.log",
+  "separator": "-",
+  "timeFormat": "YYYY-MM-DD HH:mm:ss",
+  "hideTime": false,
+  "jsonOutput": false,
+  "disabled": false
+}

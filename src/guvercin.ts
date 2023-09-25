@@ -1,8 +1,8 @@
 import moment from 'moment'
 import chalk from 'chalk'
-import * as fs from 'fs'
+import fs from 'fs'
 
-type Settings = {
+export interface Settings {
   saveToLocal?: boolean
   logPath?: string
   separator?: string
@@ -34,17 +34,36 @@ const writeToFile = (message: string, filePath: string) => {
   })
 }
 
+const defaultSettings: Settings = {
+  saveToLocal: false,
+  logPath: '',
+  separator: '-',
+  timeFormat: 'YYYY-MM-DD HH:mm:ss',
+  hideTime: false,
+  jsonOutput: false,
+  disabled: false,
+}
+
 export class Guvercin {
-  private settings: Settings = {
-    saveToLocal: false,
-    logPath: './guvercin.log',
-    separator: '-',
-    timeFormat: 'YYYY-MM-DD HH:mm:ss',
-    hideTime: false,
-    jsonOutput: false,
-    disabled: false,
-  } as Settings
+  private settings: Settings = defaultSettings
+  private loadSettings() {
+    try {
+      const settings = JSON.parse(
+        fs.readFileSync('./guvercin.config.json', 'utf-8')
+      )
+      this.settings = { ...this.settings, ...settings }
+      return this.settings
+    } catch (error) {
+      if (error.code == 'ENOENT') {
+        this.settings = defaultSettings
+      } else {
+        return null
+      }
+    }
+  }
+
   constructor(settings?: Settings) {
+    this.settings = this.loadSettings() || defaultSettings
     this.settings = { ...this.settings, ...settings }
   }
 
