@@ -1,4 +1,4 @@
-import * as moment from 'moment'
+import moment = require('moment')
 import * as chalk from 'chalk'
 import * as fs from 'fs'
 
