@@ -1,4 +1,4 @@
-type Settings = {
+export interface Settings {
     saveToLocal?: boolean;
     logPath?: string;
     separator?: string;
@@ -6,7 +6,7 @@ type Settings = {
     hideTime?: boolean;
     jsonOutput?: boolean;
     disabled?: boolean;
-};
+}
 export declare enum LogLevels {
     INFO = "INFO",
     ERROR = "ERROR",
@@ -16,6 +16,7 @@ export declare enum LogLevels {
 }
 export declare class Guvercin {
     private settings;
+    private loadSettings;
     constructor(settings?: Settings);
     log(message: string, logLevel: 'SUCCESS' | 'DEBUG' | 'WARNING' | 'ERROR' | 'INFO'): void;
     info(message: string): void;
@@ -25,4 +26,3 @@ export declare class Guvercin {
     success(message: string): void;
     getSettings(): Settings;
 }
-export {};

@@ -1,27 +1,4 @@
 "use strict";
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    var desc = Object.getOwnPropertyDescriptor(m, k);
-    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
-      desc = { enumerable: true, get: function() { return m[k]; } };
-    }
-    Object.defineProperty(o, k2, desc);
-}) : (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    o[k2] = m[k];
-}));
-var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
-    Object.defineProperty(o, "default", { enumerable: true, value: v });
-}) : function(o, v) {
-    o["default"] = v;
-});
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
-    __setModuleDefault(result, mod);
-    return result;
-};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
@@ -29,7 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.Guvercin = exports.LogLevels = void 0;
 const moment_1 = __importDefault(require("moment"));
 const chalk_1 = __importDefault(require("chalk"));
-const fs = __importStar(require("fs"));
+const fs_1 = __importDefault(require("fs"));
 var LogLevels;
 (function (LogLevels) {
     LogLevels["INFO"] = "INFO";
@@ -46,22 +23,35 @@ const LogColors = {
     SUCCESS: chalk_1.default.rgb(100, 255, 100),
 };
 const writeToFile = (message, filePath) => {
-    fs.appendFile(filePath, message, (err) => {
+    fs_1.default.appendFile(filePath, message, (err) => {
         if (err)
             throw err;
     });
 };
+const defaultSettings = {
+    saveToLocal: false,
+    separator: '-',
+    timeFormat: 'DD/MM/YYYY HH:mm:ss',
+    hideTime: false,
+    jsonOutput: false,
+    disabled: false,
+};
 class Guvercin {
+    loadSettings() {
+        try {
+            const settings = JSON.parse(fs_1.default.readFileSync('./guvercin.config.json', 'utf-8'));
+            this.settings = Object.assign(Object.assign({}, this.settings), settings);
+        }
+        catch (error) {
+            if (error.code == 'ENOENT') {
+                this.settings = defaultSettings;
+            }
+            else
+                return null;
+        }
+    }
     constructor(settings) {
-        this.settings = {
-            saveToLocal: false,
-            logPath: './guvercin.log',
-            separator: '-',
-            timeFormat: 'YYYY-MM-DD HH:mm:ss',
-            hideTime: false,
-            jsonOutput: false,
-            disabled: false,
-        };
+        this.settings = this.loadSettings() || defaultSettings;
         this.settings = Object.assign(Object.assign({}, this.settings), settings);
     }
     log(message, logLevel) {
