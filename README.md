@@ -72,3 +72,5 @@ You don't have to pass options to Guvercin constructor. You can create a `guverc
   "separator": "@"
 }
 ```
+
+**NOTE:** If you pass options to Guvercin constructor, they will override the options in `guvercin.config.json`.
