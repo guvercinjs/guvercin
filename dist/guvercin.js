@@ -67,9 +67,7 @@ class Guvercin {
             throw new Error('Message is required');
         if (!logLevel)
             throw new Error('Log level is required');
-        const time = this.settings.hideTime
-            ? ''
-            : (0, moment_1.default)().format(this.settings.timeFormat);
+        const time = this.settings.hideTime ? '' : (0, moment_1.default)().format(this.settings.timeFormat);
         const level = logLevel;
         const textColor = LogColors[logLevel];
         const separator = this.settings.separator;

@@ -52,9 +52,7 @@ export class Guvercin {
   private settings: Settings = defaultSettings
   private loadSettings() {
     try {
-      const settings = JSON.parse(
-        fs.readFileSync('./guvercin.config.json', 'utf-8')
-      )
+      const settings = JSON.parse(fs.readFileSync('./guvercin.config.json', 'utf-8'))
       return { ...this.settings, ...settings }
     } catch (error) {
       return null
@@ -67,22 +65,15 @@ export class Guvercin {
   getSettings() {
     return this.settings
   }
-  log(
-    message: string,
-    logLevel: 'SUCCESS' | 'DEBUG' | 'WARNING' | 'ERROR' | 'INFO'
-  ) {
+  log(message: string, logLevel: 'SUCCESS' | 'DEBUG' | 'WARNING' | 'ERROR' | 'INFO') {
     if (this.settings.disabled) return
     if (!message) throw new Error('Message is required')
     if (!logLevel) throw new Error('Log level is required')
-    const time = this.settings.hideTime
-      ? ''
-      : moment().format(this.settings.timeFormat)
+    const time = this.settings.hideTime ? '' : moment().format(this.settings.timeFormat)
     const level = logLevel
     const textColor = LogColors[logLevel]
     const separator = this.settings.separator
-    const textColored = `${time} ${separator} ${textColor(
-      `[${chalk.bold(level)}]`
-    )} ${separator} ${message}`
+    const textColored = `${time} ${separator} ${textColor(`[${chalk.bold(level)}]`)} ${separator} ${message}`
     const textNotColored = `${time} ${separator} [${level}] ${separator} ${message}`
     logLevel === 'ERROR'
       ? console.error(textColored)
@@ -101,9 +92,7 @@ export class Guvercin {
             this.settings.logPath
           )
         } else {
-          throw new Error(
-            'JSON output is enabled but log path is not a JSON file.'
-          )
+          throw new Error('JSON output is enabled but log path is not a JSON file.')
         }
       } else {
         writeToFile(`${textNotColored}\n`, this.settings.logPath)
