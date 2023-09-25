@@ -1,5 +1,5 @@
-import moment = require('moment')
-import * as chalk from 'chalk'
+import moment from 'moment'
+import chalk from 'chalk'
 import * as fs from 'fs'
 
 type Settings = {

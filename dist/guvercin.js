@@ -22,10 +22,13 @@ var __importStar = (this && this.__importStar) || function (mod) {
     __setModuleDefault(result, mod);
     return result;
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Guvercin = void 0;
-const moment = require("moment");
-const chalk = __importStar(require("chalk"));
+const moment_1 = __importDefault(require("moment"));
+const chalk_1 = __importDefault(require("chalk"));
 const fs = __importStar(require("fs"));
 var LogLevels;
 (function (LogLevels) {
@@ -36,11 +39,11 @@ var LogLevels;
     LogLevels["SUCCESS"] = "SUCCESS";
 })(LogLevels || (LogLevels = {}));
 const LogColors = {
-    INFO: chalk.rgb(100, 100, 255),
-    ERROR: chalk.rgb(255, 100, 100),
-    WARNING: chalk.rgb(250, 176, 5),
-    DEBUG: chalk.rgb(100, 100, 100),
-    SUCCESS: chalk.rgb(100, 255, 100),
+    INFO: chalk_1.default.rgb(100, 100, 255),
+    ERROR: chalk_1.default.rgb(255, 100, 100),
+    WARNING: chalk_1.default.rgb(250, 176, 5),
+    DEBUG: chalk_1.default.rgb(100, 100, 100),
+    SUCCESS: chalk_1.default.rgb(100, 255, 100),
 };
 const writeToFile = (message, filePath) => {
     fs.appendFile(filePath, message, (err) => {
@@ -68,10 +71,10 @@ class Guvercin {
             throw new Error('Message is required');
         if (!logLevel)
             throw new Error('Log level is required');
-        const time = moment().format(this.settings.timeFormat);
+        const time = (0, moment_1.default)().format(this.settings.timeFormat);
         const textColor = LogColors[logLevel];
         const level = logLevel;
-        const logTextColored = `${this.settings.hideTime ? '' : `${time} ${this.settings.separator} `}${textColor(`[${chalk.bold(level)}]`)} ${this.settings.separator} ${message}`;
+        const logTextColored = `${this.settings.hideTime ? '' : `${time} ${this.settings.separator} `}${textColor(`[${chalk_1.default.bold(level)}]`)} ${this.settings.separator} ${message}`;
         const logTextNotColored = `${this.settings.hideTime ? '' : `${time} ${this.settings.separator} `}[${level}] ${this.settings.separator} ${message}`;
         console.log(logTextColored);
         // TODO: Fix JSON output
@@ -93,10 +96,10 @@ class Guvercin {
             return;
         if (!message)
             throw new Error('Message is required');
-        const time = moment().format(this.settings.timeFormat);
-        const textColor = chalk.rgb(100, 100, 255);
+        const time = (0, moment_1.default)().format(this.settings.timeFormat);
+        const textColor = chalk_1.default.rgb(100, 100, 255);
         const level = LogLevels.INFO;
-        const logTextColored = `${this.settings.hideTime ? '' : `${time} ${this.settings.separator} `}${textColor(`[${chalk.bold(level)}]`)} ${this.settings.separator} ${message}`;
+        const logTextColored = `${this.settings.hideTime ? '' : `${time} ${this.settings.separator} `}${textColor(`[${chalk_1.default.bold(level)}]`)} ${this.settings.separator} ${message}`;
         const logTextNotColored = `${this.settings.hideTime ? '' : `${time} ${this.settings.separator} `}[${level}] ${this.settings.separator} ${message}`;
         console.log(logTextColored);
         // TODO: Fix JSON output
@@ -118,10 +121,10 @@ class Guvercin {
             return;
         if (!message)
             throw new Error('Message is required');
-        const time = moment().format(this.settings.timeFormat);
-        const textColor = chalk.rgb(255, 100, 100);
+        const time = (0, moment_1.default)().format(this.settings.timeFormat);
+        const textColor = chalk_1.default.rgb(255, 100, 100);
         const level = LogLevels.ERROR;
-        const logTextColored = `${this.settings.hideTime ? '' : `${time} ${this.settings.separator} `}${textColor(`[${chalk.bold(level)}]`)} ${this.settings.separator} ${message}`;
+        const logTextColored = `${this.settings.hideTime ? '' : `${time} ${this.settings.separator} `}${textColor(`[${chalk_1.default.bold(level)}]`)} ${this.settings.separator} ${message}`;
         const logTextNotColored = `${this.settings.hideTime ? '' : `${time} ${this.settings.separator} `}[${level}] ${this.settings.separator} ${message}`;
         console.log(logTextColored);
         // TODO: Fix JSON output
@@ -143,10 +146,10 @@ class Guvercin {
             return;
         if (!message)
             throw new Error('Message is required');
-        const time = moment().format(this.settings.timeFormat);
-        const textColor = chalk.rgb(250, 176, 5);
+        const time = (0, moment_1.default)().format(this.settings.timeFormat);
+        const textColor = chalk_1.default.rgb(250, 176, 5);
         const level = LogLevels.WARNING;
-        const logTextColored = `${this.settings.hideTime ? '' : `${time} ${this.settings.separator} `}${textColor(`[${chalk.bold(level)}]`)} ${this.settings.separator} ${message}`;
+        const logTextColored = `${this.settings.hideTime ? '' : `${time} ${this.settings.separator} `}${textColor(`[${chalk_1.default.bold(level)}]`)} ${this.settings.separator} ${message}`;
         const logTextNotColored = `${this.settings.hideTime ? '' : `${time} ${this.settings.separator} `}[${level}] ${this.settings.separator} ${message}`;
         console.log(logTextColored);
         // TODO: Fix JSON output
@@ -168,10 +171,10 @@ class Guvercin {
             return;
         if (!message)
             throw new Error('Message is required');
-        const time = moment().format(this.settings.timeFormat);
-        const textColor = chalk.rgb(100, 100, 100);
+        const time = (0, moment_1.default)().format(this.settings.timeFormat);
+        const textColor = chalk_1.default.rgb(100, 100, 100);
         const level = LogLevels.DEBUG;
-        const logTextColored = `${this.settings.hideTime ? '' : `${time} ${this.settings.separator} `}${textColor(`[${chalk.bold(level)}]`)} ${this.settings.separator} ${message}`;
+        const logTextColored = `${this.settings.hideTime ? '' : `${time} ${this.settings.separator} `}${textColor(`[${chalk_1.default.bold(level)}]`)} ${this.settings.separator} ${message}`;
         const logTextNotColored = `${this.settings.hideTime ? '' : `${time} ${this.settings.separator} `}[${level}] ${this.settings.separator} ${message}`;
         console.log(logTextColored);
         // TODO: Fix JSON output
@@ -193,10 +196,10 @@ class Guvercin {
             return;
         if (!message)
             throw new Error('Message is required');
-        const time = moment().format(this.settings.timeFormat);
-        const textColor = chalk.rgb(100, 255, 100);
+        const time = (0, moment_1.default)().format(this.settings.timeFormat);
+        const textColor = chalk_1.default.rgb(100, 255, 100);
         const level = LogLevels.SUCCESS;
-        const logTextColored = `${this.settings.hideTime ? '' : `${time} ${this.settings.separator} `}${textColor(`[${chalk.bold(level)}]`)} ${this.settings.separator} ${message}`;
+        const logTextColored = `${this.settings.hideTime ? '' : `${time} ${this.settings.separator} `}${textColor(`[${chalk_1.default.bold(level)}]`)} ${this.settings.separator} ${message}`;
         const logTextNotColored = `${this.settings.hideTime ? '' : `${time} ${this.settings.separator} `}[${level}] ${this.settings.separator} ${message}`;
         console.log(logTextColored);
         // TODO: Fix JSON output
