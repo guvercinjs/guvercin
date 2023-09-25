@@ -190,19 +190,6 @@ class Guvercin {
             }
         }
     }
-    // log(message: string, logLevel: LogLevels) {
-    //   switch (logLevel) {
-    //     case LogLevels.INFO:
-    //       this.info(message)
-    //       break
-    //     case LogLevels.ERROR:
-    //       this.error(message)
-    //       break
-    //     case LogLevels.WARNING:
-    //       this.warning(message)
-    //       break
-    //   }
-    // }
     getSettings() {
         return this.settings;
     }
