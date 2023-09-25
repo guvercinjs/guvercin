@@ -129,7 +129,7 @@ export class Guvercin {
     const logTextNotColored = `${
       this.settings.hideTime ? '' : `${time} ${this.settings.separator} `
     }[${level}] ${this.settings.separator} ${message}`
-    console.log(logTextColored)
+    console.error(logTextColored)
     // TODO: Fix JSON output
     if (this.settings.saveToLocal) {
       if (this.settings.jsonOutput) {
@@ -160,7 +160,7 @@ export class Guvercin {
     const logTextNotColored = `${
       this.settings.hideTime ? '' : `${time} ${this.settings.separator} `
     }[${level}] ${this.settings.separator} ${message}`
-    console.log(logTextColored)
+    console.warn(logTextColored)
     // TODO: Fix JSON output
     if (this.settings.saveToLocal) {
       if (this.settings.jsonOutput) {

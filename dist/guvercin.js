@@ -126,7 +126,7 @@ class Guvercin {
         const level = LogLevels.ERROR;
         const logTextColored = `${this.settings.hideTime ? '' : `${time} ${this.settings.separator} `}${textColor(`[${chalk_1.default.bold(level)}]`)} ${this.settings.separator} ${message}`;
         const logTextNotColored = `${this.settings.hideTime ? '' : `${time} ${this.settings.separator} `}[${level}] ${this.settings.separator} ${message}`;
-        console.log(logTextColored);
+        console.error(logTextColored);
         // TODO: Fix JSON output
         if (this.settings.saveToLocal) {
             if (this.settings.jsonOutput) {
@@ -151,7 +151,7 @@ class Guvercin {
         const level = LogLevels.WARNING;
         const logTextColored = `${this.settings.hideTime ? '' : `${time} ${this.settings.separator} `}${textColor(`[${chalk_1.default.bold(level)}]`)} ${this.settings.separator} ${message}`;
         const logTextNotColored = `${this.settings.hideTime ? '' : `${time} ${this.settings.separator} `}[${level}] ${this.settings.separator} ${message}`;
-        console.log(logTextColored);
+        console.warn(logTextColored);
         // TODO: Fix JSON output
         if (this.settings.saveToLocal) {
             if (this.settings.jsonOutput) {
