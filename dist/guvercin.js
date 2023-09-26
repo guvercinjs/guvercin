@@ -64,7 +64,11 @@ class Guvercin {
             throw new Error('Message is required');
         }
         if (!logLevel) {
-            throw new Error('Log level is required');
+            logLevel = LogLevels.INFO;
+        }
+        if (!Object.values(['SUCCESS', 'DEBUG', 'WARNING', 'ERROR', 'INFO']).includes(logLevel)) {
+            this.warning(`Log level ${logLevel} is not valid. Using INFO as default.`);
+            logLevel = LogLevels.INFO;
         }
         const time = this.settings.hideTime ? '' : (0, moment_1.default)().format(this.settings.timeFormat);
         const level = logLevel;
