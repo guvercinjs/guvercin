@@ -10,6 +10,9 @@ export interface Settings {
   saveToLocal?: boolean
   separator?: string
   timeFormat?: string
+  showErrorsOnly?: boolean
+  remoteLogging?: boolean
+  remoteLogEndpoint?: string
 }
 
 export enum LogLevels {
@@ -44,6 +47,9 @@ const defaultSettings: Settings = {
   saveToLocal: false,
   separator: '-',
   timeFormat: 'YYYY-MM-DD HH:mm:ss',
+  showErrorsOnly: false,
+  remoteLogging: false,
+  remoteLogEndpoint: '',
 }
 
 export class Guvercin {
@@ -83,6 +89,18 @@ export class Guvercin {
     const separator = this.settings.separator
     const textColored = `${time} ${separator} ${textColor(`[${chalk.bold(level)}]`)} ${separator} ${message}`
     const textNotColored = `${time} ${separator} [${level}] ${separator} ${message}`
+
+    // TODO: Add remote logging option
+    // fetch('http://localhost:3000/log', { method: 'POST', body: JSON.stringify({ time, level, message }) })
+    //   .then(() => {
+    //     console.log('Log sent to localhost:3000')
+    //     return
+    //   })
+    //   .catch(() => {
+    //     console.log('Log could not be sent to localhost:3000')
+    //     return
+    //   })
+
     logLevel === 'ERROR'
       ? console.error(textColored)
       : logLevel === 'WARNING'

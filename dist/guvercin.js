@@ -37,6 +37,9 @@ const defaultSettings = {
     saveToLocal: false,
     separator: '-',
     timeFormat: 'YYYY-MM-DD HH:mm:ss',
+    showErrorsOnly: false,
+    remoteLogging: false,
+    remoteLogEndpoint: '',
 };
 class Guvercin {
     loadSettings() {
@@ -76,6 +79,16 @@ class Guvercin {
         const separator = this.settings.separator;
         const textColored = `${time} ${separator} ${textColor(`[${chalk_1.default.bold(level)}]`)} ${separator} ${message}`;
         const textNotColored = `${time} ${separator} [${level}] ${separator} ${message}`;
+        // TODO: Add remote logging option
+        // fetch('http://localhost:3000/log', { method: 'POST', body: JSON.stringify({ time, level, message }) })
+        //   .then(() => {
+        //     console.log('Log sent to localhost:3000')
+        //     return
+        //   })
+        //   .catch(() => {
+        //     console.log('Log could not be sent to localhost:3000')
+        //     return
+        //   })
         logLevel === 'ERROR'
             ? console.error(textColored)
             : logLevel === 'WARNING'

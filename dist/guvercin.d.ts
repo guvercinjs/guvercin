@@ -6,6 +6,9 @@ export interface Settings {
     saveToLocal?: boolean;
     separator?: string;
     timeFormat?: string;
+    showErrorsOnly?: boolean;
+    remoteLogging?: boolean;
+    remoteLogEndpoint?: string;
 }
 export declare enum LogLevels {
     DEBUG = "DEBUG",
