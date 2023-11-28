@@ -9,6 +9,7 @@ export interface Settings {
     showErrorsOnly?: boolean;
     remoteLogging?: boolean;
     remoteLogEndpoint?: string;
+    name?: string;
 }
 export declare enum LogLevels {
     DEBUG = "DEBUG",
