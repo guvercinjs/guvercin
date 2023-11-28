@@ -89,11 +89,9 @@ export class Guvercin {
     const level = logLevel
     const textColor = LogColors[logLevel]
     const separator = this.settings.separator
-    const name = this.settings.name
-    const textColored = `${name ? `(${name})` : ''} ${time} ${separator} ${textColor(
-      `[${chalk.bold(level)}]`
-    )} ${separator} ${message}`
-    const textNotColored = `${name ? `(${name})` : ''} ${time} ${separator} [${level}] ${separator} ${message}`
+    const name = this.settings.name == undefined ? '' : `(${this.settings.name}) `
+    const textColored = `${name}${time} ${separator} ${textColor(`[${chalk.bold(level)}]`)} ${separator} ${message}`
+    const textNotColored = `${name}${time} ${separator} [${level}] ${separator} ${message}`
 
     // TODO: Add remote logging option
     // fetch('http://localhost:3000/log', { method: 'POST', body: JSON.stringify({ time, level, message }) })
