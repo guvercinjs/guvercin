@@ -89,7 +89,7 @@ export class Guvercin {
     const level = logLevel
     const textColor = LogColors[logLevel]
     const separator = this.settings.separator
-    const name = this.settings.name == undefined ? '' : `(${this.settings.name}) `
+    const name = this.settings.name == undefined ? '' : `(${this.settings.name}) - `
     const textColored = `${name}${time} ${separator} ${textColor(`[${chalk.bold(level)}]`)} ${separator} ${message}`
     const textNotColored = `${name}${time} ${separator} [${level}] ${separator} ${message}`
 
