@@ -24,6 +24,7 @@ const guvercin = new Guvercin({
   saveToLocal: true, // Is logs saved to local?
   separator: '@', // Separator between log type, log message and time
   timeFormat: 'DD/MM/YYYY HH:mm:ss', // Moment.js format
+  name: 'BACKEND', // Name of the Guvercin insance. (If you working with more than one instance.)
 })
 
 guvercin.debug('This is a debug message')
@@ -45,6 +46,7 @@ const guvercin = new Guvercin({
   saveToLocal: true, // Is logs saved to local?
   separator: '@', // Separator between log type, log message and time
   timeFormat: 'DD/MM/YYYY HH:mm:ss', // Moment.js format
+  name: 'BACKEND', // Name of the Guvercin insance. (If you working with more than one instance.)
 })
 
 guvercin.debug('This is a debug message')
@@ -65,7 +67,8 @@ You don't have to pass options to Guvercin constructor. You can create a `guverc
   "logPath": "./logs.json",
   "saveToLocal": true,
   "separator": "@",
-  "timeFormat": "DD/MM/YYYY HH:mm:ss"
+  "timeFormat": "DD/MM/YYYY HH:mm:ss",
+  "name": "FRONTEND"
 }
 ```
 
