@@ -1,6 +1,6 @@
 {
   "name": "guvercin",
-  "version": "1.1.5",
+  "version": "1.2.0",
   "description": "Guvercin is a very simple logger library for Node.js.",
   "main": "dist/index.js",
   "type": "commonjs",
