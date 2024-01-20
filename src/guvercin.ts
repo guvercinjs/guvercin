@@ -14,6 +14,7 @@ export interface Settings {
   remoteLogging?: boolean
   remoteLogEndpoint?: string
   name?: string
+  scope?: string
 }
 
 export enum LogLevels {
@@ -52,6 +53,7 @@ const defaultSettings: Settings = {
   remoteLogging: false,
   remoteLogEndpoint: '',
   name: undefined,
+  scope: undefined,
 }
 
 export class Guvercin {
@@ -90,7 +92,8 @@ export class Guvercin {
     const textColor = LogColors[logLevel]
     const separator = this.settings.separator
     const name = this.settings.name == undefined ? '' : `(${this.settings.name}) - `
-    const textColored = `${name}${time} ${separator} ${textColor(`[${chalk.bold(level)}]`)} ${separator} ${message}`
+    const scope = this.settings.scope == undefined ? '' : `(${this.settings.scope}) - `
+    const textColored = `${name}${time} ${separator} ${scope}${textColor(`[${level}]`)} ${separator} ${message}`
     const textNotColored = `${name}${time} ${separator} [${level}] ${separator} ${message}`
 
     // TODO: Add remote logging option
@@ -107,8 +110,8 @@ export class Guvercin {
     logLevel === 'ERROR'
       ? console.error(textColored)
       : logLevel === 'WARNING'
-      ? console.warn(textColored)
-      : console.log(textColored)
+        ? console.warn(textColored)
+        : console.log(textColored)
     if (this.settings.saveToLocal && this.settings.logPath) {
       if (this.settings.jsonOutput) {
         if (this.settings.logPath.endsWith('.json')) {
