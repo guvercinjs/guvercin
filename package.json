@@ -43,7 +43,7 @@
     "typescript": "^5.2.2"
   },
   "dependencies": {
-    "@commitlint/config-conventional": "^18.4.4",
+    "@commitlint/config-conventional": "^19.1.0",
     "chalk": "4.1.2",
     "moment": "^2.29.4"
   },
