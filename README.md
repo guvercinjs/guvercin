@@ -18,13 +18,12 @@ pnpm install guvercin
 const { Guvercin } = require('guvercin')
 
 const guvercin = new Guvercin({
-  hideTime: true, // Is time hidden in logs?
-  jsonOutput: true, // Is logs saved as JSON?
-  logPath: './logs.json', // If saveToLocal is true, logs will be saved to this path
-  saveToLocal: true, // Is logs saved to local?
-  separator: '@', // Separator between log type, log message and time
-  timeFormat: 'DD/MM/YYYY HH:mm:ss', // Moment.js format
-  name: 'BACKEND', // Name of the Guvercin insance. (If you working with more than one instance.)
+  hideTime: true,
+  logPath: './logs.log',
+  saveToLocal: true,
+  separator: '@',
+  timeFormat: 'DD/MM/YYYY HH:mm:ss',
+  name: 'BACKEND',
 })
 
 guvercin.debug('This is a debug message')
@@ -40,13 +39,13 @@ guvercin.warning('This is a warning message')
 import { Guvercin } from 'guvercin'
 
 const guvercin = new Guvercin({
-  hideTime: true, // Is time hidden in logs?
-  jsonOutput: true, // Is logs saved as JSON?
-  logPath: './logs.json', // If saveToLocal is true, logs will be saved to this path
-  saveToLocal: true, // Is logs saved to local?
-  separator: '@', // Separator between log type, log message and time
-  timeFormat: 'DD/MM/YYYY HH:mm:ss', // Moment.js format
-  name: 'BACKEND', // Name of the Guvercin insance. (If you working with more than one instance.)
+  hideTime: true,
+  jsonOutput: true,
+  logPath: './logs.log',
+  saveToLocal: true,
+  separator: '@',
+  timeFormat: 'DD/MM/YYYY HH:mm:ss',
+  name: 'BACKEND',
 })
 
 guvercin.debug('This is a debug message')
@@ -63,8 +62,7 @@ You don't have to pass options to Guvercin constructor. You can create a `guverc
 ```json
 {
   "hideTime": true,
-  "jsonOutput": true,
-  "logPath": "./logs.json",
+  "logPath": "./logs.log",
   "saveToLocal": true,
   "separator": "@",
   "timeFormat": "DD/MM/YYYY HH:mm:ss",
