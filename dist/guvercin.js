@@ -99,21 +99,7 @@ class Guvercin {
                 ? console.warn(textColored)
                 : console.log(textColored);
         if (this.settings.saveToLocal && this.settings.logPath) {
-            if (this.settings.jsonOutput) {
-                if (this.settings.logPath.endsWith('.json')) {
-                    writeToFile(`${JSON.stringify({
-                        time: time,
-                        level: level,
-                        message: message,
-                    })}\n`, this.settings.logPath);
-                }
-                else {
-                    throw new Error('JSON output is enabled but log path is not a JSON file.');
-                }
-            }
-            else {
-                writeToFile(`${textNotColored}\n`, this.settings.logPath);
-            }
+            writeToFile(`${textNotColored}\n`, this.settings.logPath);
         }
     }
     error(message) {
