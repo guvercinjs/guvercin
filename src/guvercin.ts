@@ -5,7 +5,6 @@ import fs from 'fs'
 export interface Settings {
   disabled?: boolean
   hideTime?: boolean
-  jsonOutput?: boolean
   logPath?: string
   saveToLocal?: boolean
   separator?: string
@@ -44,7 +43,6 @@ const writeToFile = (message: string, filePath: string) => {
 const defaultSettings: Settings = {
   disabled: false,
   hideTime: false,
-  jsonOutput: false,
   logPath: '',
   saveToLocal: false,
   separator: '-',
@@ -96,39 +94,13 @@ export class Guvercin {
     const textColored = `${name}${time} ${separator} ${scope}${textColor(`[${level}]`)} ${separator} ${message}`
     const textNotColored = `${name}${time} ${separator} [${level}] ${separator} ${message}`
 
-    // TODO: Add remote logging option
-    // fetch('http://localhost:3000/log', { method: 'POST', body: JSON.stringify({ time, level, message }) })
-    //   .then(() => {
-    //     console.log('Log sent to localhost:3000')
-    //     return
-    //   })
-    //   .catch(() => {
-    //     console.log('Log could not be sent to localhost:3000')
-    //     return
-    //   })
-
     logLevel === 'ERROR'
       ? console.error(textColored)
       : logLevel === 'WARNING'
         ? console.warn(textColored)
         : console.log(textColored)
     if (this.settings.saveToLocal && this.settings.logPath) {
-      if (this.settings.jsonOutput) {
-        if (this.settings.logPath.endsWith('.json')) {
-          writeToFile(
-            `${JSON.stringify({
-              time: time,
-              level: level,
-              message: message,
-            })}\n`,
-            this.settings.logPath
-          )
-        } else {
-          throw new Error('JSON output is enabled but log path is not a JSON file.')
-        }
-      } else {
-        writeToFile(`${textNotColored}\n`, this.settings.logPath)
-      }
+      writeToFile(`${textNotColored}\n`, this.settings.logPath)
     }
   }
   error(message: string) {
